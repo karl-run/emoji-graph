@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import { cn } from '@/utils/cn';
@@ -11,17 +11,30 @@ interface Props {
 }
 
 function FileDropZone({ onFileLoad }: Props): JSX.Element {
+  const [error, setError] = useState<string | null>(null);
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
       const [first] = acceptedFiles;
 
-      const result = await readDroppedFile(first);
+      try {
+        const result = await readDroppedFile(first);
 
-      if (Array.isArray(result)) {
-        onFileLoad(result);
-      } else {
-        // TODO error handling
-        console.error(result);
+        if (Array.isArray(result)) {
+          onFileLoad(result);
+        } else {
+          console.error(result);
+          setError(result.message);
+        }
+      } catch (e) {
+        if (e instanceof Error) {
+          console.error(e);
+          setError(e.message);
+        } else {
+          console.error(e);
+          setError(
+            'Something very strange has happened. 🤔 Not sure what to think about this file!',
+          );
+        }
       }
     },
     [onFileLoad],
@@ -29,14 +42,12 @@ function FileDropZone({ onFileLoad }: Props): JSX.Element {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
-  console.log('isDragActive: ', isDragActive);
-
   return (
-    <div className="m-8">
+    <div className="mt-8">
       <div
         {...getRootProps()}
         className={cn(
-          'border-dashed border-2 w-64 h-32 rounded flex justify-center items-center text-slate-700',
+          'flex h-32 w-full items-center justify-center rounded border-2 border-dashed text-slate-700 hover:border-blue-300 sm:ml-16 sm:w-1/2',
           {
             'border-blue-500': isDragActive,
           },
@@ -44,7 +55,7 @@ function FileDropZone({ onFileLoad }: Props): JSX.Element {
       >
         <input {...getInputProps()} />
         <svg
-          className="h-8 mr-2"
+          className="mr-2 h-8"
           focusable="false"
           aria-hidden="true"
           viewBox="0 0 24 24"
@@ -55,8 +66,11 @@ function FileDropZone({ onFileLoad }: Props): JSX.Element {
           ></path>
         </svg>
 
-        <span className="block text-grey">Drop your files here</span>
+        <span className="text-grey block">Drop your files here</span>
       </div>
+      {error && (
+        <p className="mt-4 w-full text-red-600 sm:ml-16 sm:w-1/2">{error}</p>
+      )}
     </div>
   );
 }
