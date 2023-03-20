@@ -34,6 +34,7 @@ function EmojiBarChart({ emoji }: { emoji: Emoji[] }): JSX.Element {
         keys={['emojis']}
         groupMode="grouped"
         layout="horizontal"
+        colors={['#5aae61']}
         tooltip={() => null}
         width={Math.min(windowSize.width * multiplier, 900)}
         height={400}
