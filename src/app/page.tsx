@@ -1,13 +1,12 @@
 import { Inter } from 'next/font/google';
 import UploadAndGraph from '@/app/upload-and-graph';
 import StepIcon from '@/components/StepIcon';
-import Script from 'next/script';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
   return (
-    <div>
+    <div className={inter.className}>
       <main className="container mx-auto p-4 sm:p-8">
         <header>
           <h1 className="text-3xl">{`Who's the most eager Emoji-uploader?`}</h1>
@@ -31,7 +30,9 @@ export default function Home() {
             are logged in!
           </p>
           <details className="pt-4">
-            <summary className="border-2 p-2 marker:bg-amber-50">Show me the script!</summary>
+            <summary className="border-2 p-2 marker:bg-amber-50">
+              Show me the script!
+            </summary>
             <Code />
           </details>
         </section>
