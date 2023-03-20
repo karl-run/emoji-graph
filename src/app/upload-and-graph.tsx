@@ -1,10 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
+
 import FileDropZone from '@/components/FileDropZone';
 import { Emoji } from '@/analyse/parse';
 import StepIcon from '@/components/StepIcon';
-import dynamic from 'next/dynamic';
 
 const EmojiBarChart = dynamic(() => import('@/components/EmojiBarChart'), {
   ssr: false,

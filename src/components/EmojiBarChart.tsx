@@ -2,7 +2,8 @@
 
 import React from 'react';
 import * as R from 'remeda';
-import { Bar, BarDatum } from '@nivo/bar';
+import { Bar } from '@nivo/bar';
+
 import { Emoji } from '@/analyse/parse';
 import { getTop } from '@/analyse/emojis';
 import { useWindowSize } from '@/utils/useWindowSize';

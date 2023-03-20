@@ -1,4 +1,5 @@
 import { Inter } from 'next/font/google';
+
 import UploadAndGraph from '@/app/upload-and-graph';
 import StepIcon from '@/components/StepIcon';
 
