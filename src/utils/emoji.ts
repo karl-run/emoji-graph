@@ -2,7 +2,7 @@ import { Emoji } from '@/analyse/parse';
 
 export function dateExtremities(emoji: Emoji[]): [start: Date, end: Date] {
   if (emoji.length === 0) {
-    return [new Date(2021, 2, 3), new Date()];
+    return [new Date(2021, 2, 3), new Date(2023, 3, 20)];
   }
 
   const dates = emoji.map((e) => e.created);

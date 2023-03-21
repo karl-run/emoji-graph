@@ -8,26 +8,21 @@ import { Emoji } from '@/analyse/parse';
 import { getTop } from '@/analyse/emojis';
 import { cn } from '@/utils/cn';
 
-const exampleData: { name: string; emojis: number }[] = [
-  { name: 'Wynny Dixey', emojis: 54 },
-  { name: 'Hilliary Tomaini', emojis: 60 },
-  { name: 'Nomi Ranscome', emojis: 66 },
-  { name: 'Aimee Lamba', emojis: 68 },
-  { name: 'Sherye Haeslier', emojis: 71 },
-  { name: 'Amitie Turfitt', emojis: 90 },
-  { name: 'Rosabelle Adlem', emojis: 187 },
-  { name: 'Johnath Stenning', emojis: 269 },
-  { name: 'Shermie Weinham', emojis: 362 },
-  { name: 'Ursulina Schorah', emojis: 456 },
-];
+type ChartData = { name: string; emojis: number }[];
+
+type Props = {
+  emoji: Emoji[];
+  top?: number;
+  limits: { start: Date | null; end: Date | null };
+};
 
 function EmojiBarChart({
   emoji,
   children,
+  limits,
   top = 10,
-}: PropsWithChildren<{ emoji: Emoji[]; top?: number }>): JSX.Element {
-  const data =
-    emoji.length == 0 ? exampleData.slice(0, top) : mapToTop(emoji, top);
+}: PropsWithChildren<Props>): JSX.Element {
+  const [data, filteredEmojis] = useData({ emoji, limits, top });
   const longestName = R.maxBy(data, (it) => it.name.length);
 
   return (
@@ -62,18 +57,61 @@ function EmojiBarChart({
           enableGridX
         />
       </div>
+      <p className="text-center text-xs">
+        {filteredEmojis.length} emojis in total
+      </p>
     </div>
   );
 }
 
-function mapToTop(
-  emoji: Emoji[],
-  top: number,
-): { name: string; emojis: number }[] {
+function mapToTop(emoji: Emoji[], top: number): ChartData {
   return R.pipe(
     getTop(emoji, top),
     R.map(([key, count]) => ({ name: key, emojis: count })),
   );
 }
+
+type UseDataOptions = Pick<Props, 'emoji' | 'limits'> & { top: number };
+
+function useData({ emoji, top, limits }: UseDataOptions): [ChartData, Emoji[]] {
+  if (emoji.length === 0) {
+    return [exampleData.slice(0, top), []];
+  }
+
+  const filterByStart = (emoji: Emoji[]) => {
+    if (limits.start) {
+      const tsLimit = limits.start.getTime() / 1000;
+      return R.filter(emoji, (it) => it.created >= tsLimit);
+    } else {
+      return emoji;
+    }
+  };
+
+  const filterByEnd = (emoji: Emoji[]) => {
+    if (limits.end) {
+      const tsLimit = limits.end.getTime() / 1000;
+      return R.filter(emoji, (it) => it.created <= tsLimit);
+    } else {
+      return emoji;
+    }
+  };
+
+  const filteredEmoji = R.pipe(emoji, filterByStart, filterByEnd);
+
+  return [mapToTop(filteredEmoji, top), filteredEmoji];
+}
+
+const exampleData: ChartData = [
+  { name: 'Wynny Dixey', emojis: 54 },
+  { name: 'Hilliary Tomaini', emojis: 60 },
+  { name: 'Nomi Ranscome', emojis: 66 },
+  { name: 'Aimee Lamba', emojis: 68 },
+  { name: 'Sherye Haeslier', emojis: 71 },
+  { name: 'Amitie Turfitt', emojis: 90 },
+  { name: 'Rosabelle Adlem', emojis: 187 },
+  { name: 'Johnath Stenning', emojis: 269 },
+  { name: 'Shermie Weinham', emojis: 362 },
+  { name: 'Ursulina Schorah', emojis: 456 },
+];
 
 export default EmojiBarChart;

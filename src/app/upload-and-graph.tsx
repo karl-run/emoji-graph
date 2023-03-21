@@ -16,9 +16,9 @@ const EmojiBarChart = dynamic(() => import('@/components/EmojiBarChart'), {
 function UploadAndGraph(): JSX.Element {
   const [data, setData] = useState<Emoji[]>([]);
   const [size, setSize] = useState(10);
+  const [start, setStart] = useState<Date | null>(null);
+  const [end, setEnd] = useState<Date | null>(null);
   const extremities = dateExtremities(data);
-
-  console.log(extremities);
 
   return (
     <div>
@@ -34,6 +34,22 @@ function UploadAndGraph(): JSX.Element {
         </p>
         <FileDropZone onFileLoad={setData} />
       </section>
+      <section className="mt-8">
+        <h2
+          id="step-2-description"
+          className="mb-4 flex items-center text-center"
+        >
+          <StepIcon>3</StepIcon>
+          <span>Tweak it! (Optional)</span>
+        </h2>
+        <Controls
+          key={extremities.map((it) => it.toISOString()).join('-')}
+          extremities={extremities}
+          onSizeChange={setSize}
+          onStartChange={(date) => setStart(date)}
+          onEndChange={(date) => setEnd(date)}
+        />
+      </section>
       <section className="mt-8" aria-labelledby="step-2-description">
         <h2 id="step-2-description" className="flex items-center text-center">
           <StepIcon>3</StepIcon>
@@ -42,13 +58,22 @@ function UploadAndGraph(): JSX.Element {
         <p className="pt-4 sm:w-3/4">
           Screenshot the graph below and share it!
         </p>
-        <EmojiBarChart emoji={data} top={size}>
+        <EmojiBarChart emoji={data} top={size} limits={{ start, end }}>
           <h3 className="mt-4 text-center">
-            Top 10 emoji uploaders between {extremities[0].toLocaleDateString()}{' '}
-            and {extremities[1].toLocaleDateString()}
+            Top 10 emoji uploaders between{' '}
+            <span className="font-bold">
+              {start == null
+                ? extremities[0].toLocaleDateString()
+                : start.toLocaleDateString()}{' '}
+            </span>
+            and{' '}
+            <span className="font-bold">
+              {end == null
+                ? extremities[1].toLocaleDateString()
+                : end.toLocaleDateString()}
+            </span>
           </h3>
         </EmojiBarChart>
-        <Controls extremities={extremities} onSizeChange={setSize} />
       </section>
     </div>
   );
