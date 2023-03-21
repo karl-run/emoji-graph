@@ -51,11 +51,15 @@ function EmojiBarChart({
           layout="horizontal"
           colors={['#5aae61']}
           tooltip={() => null}
+          axisLeft={{
+            format: (value) =>
+              value.length > 22 ? `${value.slice(0, 20)}…` : value,
+          }}
           margin={{
             top: 0,
             right: 0,
             bottom: 30,
-            left: (longestName?.name.length ?? 1) * 7.5,
+            left: 140,
           }}
           data={data}
           padding={0.2}
