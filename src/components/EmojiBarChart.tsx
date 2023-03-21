@@ -25,7 +25,7 @@ function EmojiBarChart({
   limits,
   top = 10,
 }: PropsWithChildren<Props>): JSX.Element {
-  const [timeLeft, { start, reset }] = useCountDown(RUNTIME, 200);
+  const [timeLeft, { start, reset }] = useCountDown(RUNTIME, 64);
   const [data, filteredEmojis, animationDate] = useData({
     emoji,
     limits,
@@ -35,7 +35,7 @@ function EmojiBarChart({
   const longestName = R.maxBy(data, (it) => it.name.length);
 
   return (
-    <div className="my-8 w-full max-w-4xl">
+    <div className="relative my-8 w-full max-w-4xl">
       {children}
       <div
         className={cn('h-96 w-full', {
@@ -66,12 +66,12 @@ function EmojiBarChart({
           enableGridX
         />
       </div>
+      {timeLeft !== 0 && animationDate != null && (
+        <div className="absolute left-4 bottom-16 w-20 text-lg font-bold">
+          {animationDate?.toLocaleDateString()}
+        </div>
+      )}
       <p className="text-center text-xs">
-        {animationDate != null && (
-          <span className="inline-block w-20">
-            {animationDate?.toLocaleDateString()}:{' '}
-          </span>
-        )}
         <span className="inline-block w-32 text-right">
           {filteredEmojis.length} emojis in total
         </span>
