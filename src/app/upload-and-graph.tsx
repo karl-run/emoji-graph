@@ -52,7 +52,7 @@ function UploadAndGraph(): JSX.Element {
       </section>
       <section className="mt-8" aria-labelledby="step-2-description">
         <h2 id="step-2-description" className="flex items-center text-center">
-          <StepIcon>3</StepIcon>
+          <StepIcon>4</StepIcon>
           <span>Share it!</span>
         </h2>
         <p className="pt-4 sm:w-3/4">
@@ -67,7 +67,7 @@ function UploadAndGraph(): JSX.Element {
           }}
         >
           <h3 className="mt-4 text-center">
-            Top 10 emoji uploaders between{' '}
+            Top {size} emoji uploaders between{' '}
             <span className="font-bold">
               {start == null
                 ? extremities[0].toLocaleDateString()
