@@ -6,6 +6,8 @@ import dynamic from 'next/dynamic';
 import FileDropZone from '@/components/FileDropZone';
 import { Emoji } from '@/analyse/parse';
 import StepIcon from '@/components/StepIcon';
+import Controls from '@/components/Controls';
+import { dateExtremities } from '@/utils/emoji';
 
 const EmojiBarChart = dynamic(() => import('@/components/EmojiBarChart'), {
   ssr: false,
@@ -13,8 +15,10 @@ const EmojiBarChart = dynamic(() => import('@/components/EmojiBarChart'), {
 
 function UploadAndGraph(): JSX.Element {
   const [data, setData] = useState<Emoji[]>([]);
+  const [size, setSize] = useState(10);
+  const extremities = dateExtremities(data);
 
-  console.log(data);
+  console.log(extremities);
 
   return (
     <div>
@@ -38,7 +42,13 @@ function UploadAndGraph(): JSX.Element {
         <p className="pt-4 sm:w-3/4">
           Screenshot the graph below and share it!
         </p>
-        <EmojiBarChart emoji={data} />
+        <EmojiBarChart emoji={data} top={size}>
+          <h3 className="mt-4 text-center">
+            Top 10 emoji uploaders between {extremities[0].toLocaleDateString()}{' '}
+            and {extremities[1].toLocaleDateString()}
+          </h3>
+        </EmojiBarChart>
+        <Controls extremities={extremities} onSizeChange={setSize} />
       </section>
     </div>
   );

@@ -2,7 +2,7 @@ import * as R from 'remeda';
 
 import { Emoji } from '@/analyse/parse';
 
-export function getTop(emojis: Emoji[], count = 10): [string, number][] {
+export function getTop(emojis: Emoji[], count: number): [string, number][] {
   const userLookup = R.pipe(
     emojis,
     R.uniqBy(R.prop('user_id')),

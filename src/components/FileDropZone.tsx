@@ -21,6 +21,7 @@ function FileDropZone({ onFileLoad }: Props): JSX.Element {
 
         if (Array.isArray(result)) {
           onFileLoad(result);
+          setError(null);
         } else {
           console.error(result);
           setError(result.message);
