@@ -56,8 +56,8 @@ function EmojiBarChart({
               value.length > 22 ? `${value.slice(0, 20)}…` : value,
           }}
           margin={{
-            top: 0,
-            right: 0,
+            top: 4,
+            right: 4,
             bottom: 30,
             left: 140,
           }}
