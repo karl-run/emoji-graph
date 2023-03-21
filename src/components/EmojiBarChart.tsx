@@ -58,7 +58,7 @@ function EmojiBarChart({ emoji }: { emoji: Emoji[] }): JSX.Element {
 
 function mapToTop10(emoji: Emoji[]): { name: string; emojis: number }[] {
   return R.pipe(
-    getTop(emoji, 100),
+    getTop(emoji, 10),
     R.map(([key, count]) => ({ name: key, emojis: count })),
   );
 }
