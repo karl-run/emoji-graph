@@ -42,7 +42,7 @@ function EmojiBarChart({ emoji }: { emoji: Emoji[] }): JSX.Element {
           top: 0,
           right: 0,
           bottom: 30,
-          left: (longestName?.name.length ?? 1) * 6.5,
+          left: (longestName?.name.length ?? 1) * 7,
         }}
         data={data}
         padding={0.2}
