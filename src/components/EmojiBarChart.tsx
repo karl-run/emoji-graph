@@ -3,6 +3,7 @@
 import React, { PropsWithChildren } from 'react';
 import * as R from 'remeda';
 import { ResponsiveBar } from '@nivo/bar';
+import useCountDown from 'react-countdown-hook';
 
 import { Emoji } from '@/analyse/parse';
 import { getTop } from '@/analyse/emojis';
@@ -13,8 +14,10 @@ type ChartData = { name: string; emojis: number }[];
 type Props = {
   emoji: Emoji[];
   top?: number;
-  limits: { start: Date | null; end: Date | null };
+  limits: { start: Date; end: Date };
 };
+
+const RUNTIME = 60 * 1000;
 
 function EmojiBarChart({
   emoji,
@@ -22,7 +25,13 @@ function EmojiBarChart({
   limits,
   top = 10,
 }: PropsWithChildren<Props>): JSX.Element {
-  const [data, filteredEmojis] = useData({ emoji, limits, top });
+  const [timeLeft, { start, reset }] = useCountDown(RUNTIME, 200);
+  const [data, filteredEmojis, animationDate] = useData({
+    emoji,
+    limits,
+    top,
+    timeLeft,
+  });
   const longestName = R.maxBy(data, (it) => it.name.length);
 
   return (
@@ -46,7 +55,7 @@ function EmojiBarChart({
             top: 0,
             right: 0,
             bottom: 30,
-            left: (longestName?.name.length ?? 1) * 7,
+            left: (longestName?.name.length ?? 1) * 7.5,
           }}
           data={data}
           padding={0.2}
@@ -58,8 +67,45 @@ function EmojiBarChart({
         />
       </div>
       <p className="text-center text-xs">
-        {filteredEmojis.length} emojis in total
+        {animationDate != null && (
+          <span className="inline-block w-20">
+            {animationDate?.toLocaleDateString()}:{' '}
+          </span>
+        )}
+        <span className="inline-block w-32 text-right">
+          {filteredEmojis.length} emojis in total
+        </span>
       </p>
+      <div className="mt-4 flex items-center">
+        <button
+          className="mr-4 h-8 w-8 rounded-full bg-blue-300 hover:bg-blue-100 focus:bg-blue-100"
+          onClick={() => {
+            if (timeLeft === 0) {
+              start();
+            } else {
+              reset();
+            }
+          }}
+        >
+          ⏯
+        </button>
+        <div className="relative w-full">
+          <div className="absolute h-1 w-full bg-slate-300" aria-hidden />
+          <div
+            className="absolute h-1 w-full bg-blue-300"
+            aria-hidden
+            style={{
+              width:
+                timeLeft === 0
+                  ? '0%'
+                  : `${((RUNTIME - timeLeft) / RUNTIME) * 100}%`,
+            }}
+          />
+          {timeLeft !== 0 && (
+            <div className="absolute top-2">{Math.floor(timeLeft / 1000)}s</div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
@@ -71,11 +117,23 @@ function mapToTop(emoji: Emoji[], top: number): ChartData {
   );
 }
 
-type UseDataOptions = Pick<Props, 'emoji' | 'limits'> & { top: number };
+type UseDataOptions = Pick<Props, 'emoji' | 'limits'> & {
+  top: number;
+  timeLeft: number;
+};
 
-function useData({ emoji, top, limits }: UseDataOptions): [ChartData, Emoji[]] {
+function useData({
+  emoji,
+  top,
+  limits,
+  timeLeft,
+}: UseDataOptions): [ChartData, Emoji[], Date | null] {
+  const diff = (limits.end.getTime() - limits.start.getTime()) / 1000;
+  const tsStart = limits.start.getTime() / 1000;
+  const percentComplete = (RUNTIME - timeLeft) / RUNTIME;
+
   if (emoji.length === 0) {
-    return [exampleData.slice(0, top), []];
+    return [exampleData.slice(0, top), [], null];
   }
 
   const filterByStart = (emoji: Emoji[]) => {
@@ -88,6 +146,13 @@ function useData({ emoji, top, limits }: UseDataOptions): [ChartData, Emoji[]] {
   };
 
   const filterByEnd = (emoji: Emoji[]) => {
+    if (timeLeft !== 0) {
+      return R.filter(
+        emoji,
+        (it) => it.created <= tsStart + diff * percentComplete,
+      );
+    }
+
     if (limits.end) {
       const tsLimit = limits.end.getTime() / 1000;
       return R.filter(emoji, (it) => it.created <= tsLimit);
@@ -98,7 +163,13 @@ function useData({ emoji, top, limits }: UseDataOptions): [ChartData, Emoji[]] {
 
   const filteredEmoji = R.pipe(emoji, filterByStart, filterByEnd);
 
-  return [mapToTop(filteredEmoji, top), filteredEmoji];
+  return [
+    mapToTop(filteredEmoji, top),
+    filteredEmoji,
+    timeLeft !== 0
+      ? new Date((tsStart + diff * percentComplete) * 1000)
+      : limits.end,
+  ];
 }
 
 const exampleData: ChartData = [

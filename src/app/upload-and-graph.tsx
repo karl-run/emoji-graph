@@ -58,7 +58,14 @@ function UploadAndGraph(): JSX.Element {
         <p className="pt-4 sm:w-3/4">
           Screenshot the graph below and share it!
         </p>
-        <EmojiBarChart emoji={data} top={size} limits={{ start, end }}>
+        <EmojiBarChart
+          emoji={data}
+          top={size}
+          limits={{
+            start: start ?? extremities[0],
+            end: end ?? extremities[1],
+          }}
+        >
           <h3 className="mt-4 text-center">
             Top 10 emoji uploaders between{' '}
             <span className="font-bold">
