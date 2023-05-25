@@ -49,6 +49,17 @@ function AccessibleTextSummary({
           <dd>{emoji.length}</dd>
           <dt>Unqiue uploaders</dt>
           <dd>{R.uniqBy(emoji, (it) => it.user_id).length}</dd>
+          <dt>Uploaders with a single emoji</dt>
+          <dd>
+            {
+              R.pipe(
+                emoji,
+                R.groupBy(R.prop('user_id')),
+                R.toPairs,
+                R.filter(([_, it]) => it.length === 1),
+              ).length
+            }
+          </dd>
           <dt>Uploaders with more than 10</dt>
           <dd>
             {
