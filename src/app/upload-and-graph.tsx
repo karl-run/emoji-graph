@@ -62,7 +62,8 @@ function UploadAndGraph(): JSX.Element {
         <AccessibleTextSummary
           emoji={data}
           size={size}
-          extremities={extremities}
+          start={start ?? extremities[0]}
+          end={end ?? extremities[1]}
         />
         <EmojiBarChart
           emoji={data}
@@ -75,15 +76,11 @@ function UploadAndGraph(): JSX.Element {
           <h3 className="mt-4 text-center">
             Top {size} emoji uploaders between{' '}
             <span className="font-bold">
-              {start == null
-                ? extremities[0].toLocaleDateString()
-                : start.toLocaleDateString()}{' '}
+              {(start ?? extremities[0]).toLocaleDateString()}{' '}
             </span>
             and{' '}
             <span className="font-bold">
-              {end == null
-                ? extremities[1].toLocaleDateString()
-                : end.toLocaleDateString()}
+              {(end ?? extremities[1]).toLocaleDateString()}
             </span>
           </h3>
         </EmojiBarChart>
