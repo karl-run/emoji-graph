@@ -8,6 +8,7 @@ import { Emoji } from '@/analyse/parse';
 import StepIcon from '@/components/StepIcon';
 import Controls from '@/components/Controls';
 import { dateExtremities } from '@/utils/emoji';
+import AccessibleTextSummary from '@/components/AccessibleTextSummary';
 
 const EmojiBarChart = dynamic(() => import('@/components/EmojiBarChart'), {
   ssr: false,
@@ -58,6 +59,11 @@ function UploadAndGraph(): JSX.Element {
         <p className="pt-4 sm:w-3/4">
           Screenshot the graph below and share it!
         </p>
+        <AccessibleTextSummary
+          emoji={data}
+          size={size}
+          extremities={extremities}
+        />
         <EmojiBarChart
           emoji={data}
           top={size}
