@@ -1,39 +1,36 @@
-import { Inter } from 'next/font/google';
-
-import UploadAndGraph from '@/app/upload-and-graph';
 import StepIcon from '@/components/StepIcon';
+import UploadAndGraph from '@/components/UploadAndGraph';
 
-const inter = Inter({ subsets: ['latin'] });
-
-export default function Home() {
+function App(): JSX.Element {
   return (
-    <div className={inter.className}>
-      <main className="container mx-auto p-4 sm:p-8">
-        <header>
-          <h1 className="text-3xl">{`Who's the most eager Emoji-uploader?`}</h1>
-          <p className="text-md">Create a fun graph for your slack workspace</p>
+    <div className="app-shell">
+      <main className="page">
+        <header className="hero">
+          <h1 className="hero__title">{`Who's the most eager Emoji-uploader?`}</h1>
+          <p className="hero__subtitle">
+            Create a fun graph for your Slack workspace
+          </p>
         </header>
-        <section className="mt-8" aria-labelledby="step-1-description">
-          <h2 id="step-1-description" className="flex items-center text-center">
+
+        <section className="section-block" aria-labelledby="step-1-description">
+          <h2 id="step-1-description" className="section-title">
             <StepIcon>1</StepIcon>
             <span>Get the data</span>
           </h2>
-          <p className="pt-4 sm:w-3/4">
+          <p className="copy-block">
             This is the most difficult step! There {`isn't`} an easy way to
             extract all the emojis in a workspace. So I have created a small
             script.
           </p>
-          <p className="pt-4 sm:w-3/4">
+          <p className="copy-block">
             The script requires some technical knowledge, and it it is never a
             good idea to listen to random websites when they tell you to paste
             scripts into other websites.{' '}
-            <span className="italic">Especially</span> other websites where you
-            are logged in!
+            <span className="text-emphasis">Especially</span> other websites
+            where you are logged in!
           </p>
-          <details className="pt-4">
-            <summary className="border-2 p-2 marker:bg-amber-50">
-              Show me the script!
-            </summary>
+          <details className="details-block">
+            <summary className="code-summary">Show me the script!</summary>
             <Code />
           </details>
         </section>
@@ -46,7 +43,7 @@ export default function Home() {
 
 function Code(): JSX.Element {
   return (
-    <pre className="mt-2 overflow-auto rounded border-2 p-4">
+    <pre className="code-block">
       {`
 /**
  * Hacky way to pull all data about emojis in a slack workspace.
@@ -125,3 +122,5 @@ function Code(): JSX.Element {
     </pre>
   );
 }
+
+export default App;

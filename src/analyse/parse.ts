@@ -44,7 +44,7 @@ export function readDroppedFile(
         } else {
           reject(parsed.error.message);
         }
-      } catch (error) {
+      } catch {
         reject('Malformed JSON-file');
       }
     };

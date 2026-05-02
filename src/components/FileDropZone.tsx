@@ -1,6 +1,4 @@
-'use client';
-
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 import { cn } from '@/utils/cn';
@@ -44,19 +42,16 @@ function FileDropZone({ onFileLoad }: Props): JSX.Element {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
-    <div className="mt-8">
+    <div className="dropzone-wrapper">
       <div
         {...getRootProps()}
-        className={cn(
-          'flex h-32 w-full items-center justify-center rounded border-2 border-dashed text-slate-700 hover:border-blue-300 sm:ml-16 sm:w-1/2',
-          {
-            'border-blue-500': isDragActive,
-          },
-        )}
+        className={cn('dropzone', {
+          'dropzone--active': isDragActive,
+        })}
       >
         <input {...getInputProps()} />
         <svg
-          className="mr-2 h-8"
+          className="dropzone__icon"
           focusable="false"
           aria-hidden="true"
           viewBox="0 0 24 24"
@@ -67,11 +62,9 @@ function FileDropZone({ onFileLoad }: Props): JSX.Element {
           ></path>
         </svg>
 
-        <span className="text-grey block">Drop your files here</span>
+        <span className="dropzone__text">Drop your file here</span>
       </div>
-      {error && (
-        <p className="mt-4 w-full text-red-600 sm:ml-16 sm:w-1/2">{error}</p>
-      )}
+      {error && <p className="dropzone__error">{error}</p>}
     </div>
   );
 }

@@ -1,9 +1,8 @@
 import clsx from 'clsx';
-import { twMerge } from 'tailwind-merge';
 
 /**
- * Wrapper for clsx that de-duplicates and merges tailwind classes
+ * Wrapper for clsx used for conditional class names
  */
 export const cn: typeof clsx = (...args) => {
-  return twMerge(clsx(...args));
+  return clsx(...args);
 };

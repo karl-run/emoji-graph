@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { cn } from '@/utils/cn';
 
@@ -28,18 +28,17 @@ function Controls({
   const lastDate = last.toISOString().slice(0, 10);
 
   return (
-    <div className="flex flex-wrap gap-4">
-      <div className="relative w-min rounded bg-slate-100 p-4">
-        <fieldset className="flex gap-4">
-          <legend className="mb-2">Legend</legend>
+    <div className="controls">
+      <div className="control-card">
+        <fieldset className="control-fieldset">
+          <legend className="control-legend">Date range</legend>
           <input
             ref={startRef}
-            className={cn('rounded border-2 p-2', {
-              'border-dotted border-blue-400 focus-visible:border-blue-400':
-                startValue !== firstDate,
+            className={cn('control-input', {
+              'control-input--changed': startValue !== firstDate,
             })}
             type="date"
-            id="start"
+            id="start-date"
             name="time-start"
             defaultValue={firstDate}
             min={firstDate}
@@ -52,12 +51,11 @@ function Controls({
 
           <input
             ref={endRef}
-            className={cn('rounded border-2 p-2', {
-              'border-dotted border-blue-400 focus-visible:border-blue-400':
-                endValue !== lastDate,
+            className={cn('control-input', {
+              'control-input--changed': endValue !== lastDate,
             })}
             type="date"
-            id="start"
+            id="end-date"
             name="time-end"
             defaultValue={lastDate}
             min={firstDate}
@@ -69,7 +67,8 @@ function Controls({
           />
         </fieldset>
         <button
-          className="absolute top-4 right-4 underline"
+          type="button"
+          className="control-reset"
           onClick={() => {
             if (startRef.current) {
               startRef.current.value = firstDate;
@@ -86,14 +85,14 @@ function Controls({
           Reset
         </button>
       </div>
-      <div className="flex w-min w-48 max-w-xs flex-col rounded bg-slate-100 p-4">
-        <label className="mb-2" htmlFor="graph-size-select">
+      <div className="control-card control-card--compact">
+        <label className="control-label" htmlFor="graph-size-select">
           Graph size
         </label>
         <select
           name="graph-size-select"
           id="graph-size-select"
-          className="rounded border-2 bg-white p-2.5"
+          className="control-select"
           defaultValue="10"
           onChange={(event) => {
             onSizeChange(+event.currentTarget.value);

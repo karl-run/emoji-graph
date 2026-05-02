@@ -1,6 +1,4 @@
-'use client';
-
-import React, { PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'react';
 import * as R from 'remeda';
 import { ResponsiveBar } from '@nivo/bar';
 import useCountDown from 'react-countdown-hook';
@@ -32,16 +30,14 @@ function EmojiBarChart({
     top,
     timeLeft,
   });
-  const longestName = R.maxBy(data, (it) => it.name.length);
-
   return (
-    <div className="relative my-8 w-full max-w-4xl">
+    <div className="chart">
       {children}
       <div
-        className={cn('h-96 w-full', {
-          'h-[40rem]': top === 30,
-          'h-[32rem]': top === 20,
-          'h-[12rem]': top === 3,
+        className={cn('chart__visual', {
+          'chart__visual--top-30': top === 30,
+          'chart__visual--top-20': top === 20,
+          'chart__visual--top-3': top === 3,
         })}
       >
         <ResponsiveBar
@@ -71,18 +67,19 @@ function EmojiBarChart({
         />
       </div>
       {timeLeft !== 0 && animationDate != null && (
-        <div className="absolute left-4 bottom-16 w-20 text-lg font-bold">
+        <div className="chart__animation-date">
           {animationDate?.toLocaleDateString()}
         </div>
       )}
-      <p className="text-center text-xs">
-        <span className="inline-block w-32 text-right">
+      <p className="chart__totals">
+        <span className="chart__totals-count">
           {filteredEmojis.length} emojis in total
         </span>
       </p>
-      <div className="mt-4 flex items-center">
+      <div className="chart__controls">
         <button
-          className="mr-4 h-8 w-8 rounded-full bg-blue-300 hover:bg-blue-100 focus:bg-blue-100"
+          type="button"
+          className="chart__toggle"
           onClick={() => {
             if (timeLeft === 0) {
               start();
@@ -93,10 +90,10 @@ function EmojiBarChart({
         >
           ⏯
         </button>
-        <div className="relative w-full">
-          <div className="absolute h-1 w-full bg-slate-300" aria-hidden />
+        <div className="chart__progress">
+          <div className="chart__progress-track" aria-hidden />
           <div
-            className="absolute h-1 w-full bg-blue-300"
+            className="chart__progress-fill"
             aria-hidden
             style={{
               width:
@@ -106,7 +103,9 @@ function EmojiBarChart({
             }}
           />
           {timeLeft !== 0 && (
-            <div className="absolute top-2">{Math.floor(timeLeft / 1000)}s</div>
+            <div className="chart__progress-time">
+              {Math.floor(timeLeft / 1000)}s
+            </div>
           )}
         </div>
       </div>

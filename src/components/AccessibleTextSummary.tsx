@@ -1,4 +1,3 @@
-import React from 'react';
 import * as R from 'remeda';
 
 import { Emoji } from '@/analyse/parse';
@@ -28,26 +27,26 @@ function AccessibleTextSummary({
 
   return (
     <>
-      <details>
+      <details className="summary-section">
         <summary>Accessible text for screenshots</summary>
         <h4>Title:</h4>
-        <pre className="border p-1">
+        <pre className="summary-pre">
           Top {size} emoji uploaders between {start.toLocaleDateString()} and{' '}
           {end.toLocaleDateString()}
         </pre>
         <h4>Description:</h4>
-        <pre className="border p-1">
+        <pre className="summary-pre">
           {R.reverse(top)
             .map(([name, count]) => `${name}: ${count}`)
             .join('\n')}
         </pre>
       </details>
-      <details>
+      <details className="summary-section">
         <summary>Fun stats</summary>
-        <dl>
+        <dl className="stats-grid">
           <dt>Total emojis</dt>
           <dd>{emoji.length}</dd>
-          <dt>Unqiue uploaders</dt>
+          <dt>Unique uploaders</dt>
           <dd>{R.uniqBy(emoji, (it) => it.user_id).length}</dd>
           <dt>Uploaders with a single emoji</dt>
           <dd>
@@ -56,7 +55,7 @@ function AccessibleTextSummary({
                 emoji,
                 R.groupBy(R.prop('user_id')),
                 R.toPairs,
-                R.filter(([_, it]) => it.length === 1),
+                R.filter(([, it]) => it.length === 1),
               ).length
             }
           </dd>
@@ -67,7 +66,7 @@ function AccessibleTextSummary({
                 emoji,
                 R.groupBy(R.prop('user_id')),
                 R.toPairs,
-                R.filter(([_, it]) => it.length > 10),
+                R.filter(([, it]) => it.length > 10),
               ).length
             }
           </dd>
